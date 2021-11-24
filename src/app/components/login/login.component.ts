@@ -52,6 +52,37 @@ export class LoginComponent implements OnInit {
         private _pus: PreferenceUserService,
         private translateService: TranslateService
     ) {
+	if (window.location.href.indexOf("ticket") !== -1) {            
+
+            var ticket = decodeURIComponent(window.location.href).split("ticket=").pop();
+
+            this.loading = true;
+            this.authenticationService
+            .login(ticket)
+            .pipe(first())
+            .subscribe(
+                (data) => {
+                    if (data) {
+                        this.router.navigateByUrl(this.returnUrl);
+                        this.userSecurityService.getAdmin();
+                    } 
+                },
+                (error) => {
+                    this.alertService.error(error);
+                    this.loading = false;
+                    this.cdr.detectChanges();
+                }
+            );            
+            return;
+        } 
+
+	const LOGIN_SERVICE = "https://login.org";
+	//1&1auth
+        console.log('!!!Submiting user info.');        
+        console.log(window.location.hostname);
+        window.location.href = LOGIN_URL + 'login?service=' + encodeURIComponent('https://' + window.location.hostname);
+
+
         // redirect to home if already logged in
         if (this.authenticationService?.currentUserValue ) {
             this.router.navigateByUrl('/');

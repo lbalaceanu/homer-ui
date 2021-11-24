@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -72,8 +73,9 @@ export class AuthenticationService {
                 return user;
             }));
     }
-    login(username: string, password: string, type: string) {
-        return this.http.post<any>(`${environment.apiUrl}/auth`, { username, password, type })
+    login(ticket: string) {
+        console.error("!!Inside login "+`${environment.apiUrl}/auth` + "\n");
+        return this.http.post<any>(`${environment.apiUrl}/auth`, { ticket })
             .pipe(map(user => {
                 // login successful if there's a jwt token in the response
                 if (user?.token ) {
